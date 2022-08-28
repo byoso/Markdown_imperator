@@ -2,27 +2,28 @@
 
 {% block content %}
 
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <div class="columns">
     <div class="mr-2 column is-half">
         <form action="" method="POST">
             <div class="columns">
-                <div class="column">
-                    <input type="text" name="title" class="input m-1" placeholder="Title" value="{{ doc.title }}">
+                <div class="column is-four-fifths">
+                    <input type="text" name="title" id="title" class="input m-1" placeholder="Title" value="{{ doc.title }}">
                 </div>
                 <div class="column is-one-fifth">
-                    <button type="submit" class="button is-primary m-1">Save (ctrl+s)</button>
+                    <button type="submit" id="save_button" class="button is-primary m-1">Save (ctrl+s)</button>
 
                 </div>
             </div>
-            <textarea class="textarea" name="text" rows="25" width="45%">{{ doc.content }}</textarea>
+            <textarea class="textarea" id="content" name="content" rows="25" width="45%">{{ doc.content }}</textarea>
             </textarea>
         </form>
 
 
     </div>
 
-    <div class="ml-2 mt-2">
-        {{ doc.render | safe}}
+    <div id="render" class="ml-2 mt-2" style="overflow-y:scroll; height:700px; width:100%">
 
     </div>
 
@@ -31,3 +32,27 @@
 </div>
 
 {% endblock content %}
+
+{% block script %}
+<script>
+    let content = document.getElementById("content")
+    let render = document.getElementById('render')
+
+    render.innerHTML = marked.parse(content.value);
+
+    var save_redirect = "{{ url_for('edit', doc_id=doc.id) }}";
+    document.addEventListener('keyup', e => {
+        render.innerHTML = marked.parse(content.value);
+        }
+    );
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key ==='s') {
+            e.preventDefault();
+            document.getElementById('save_button').click();
+        }
+    });
+
+</script>
+
+
+{% endblock script %}

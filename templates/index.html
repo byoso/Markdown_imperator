@@ -4,20 +4,20 @@
 
 
         {% if docs %}
-        <h2 class="h2">Documents <a href="" class="button">+New</a></h2>
+        <a href="{{ url_for('new_file') }}" class="button is-primary m-2">+New document</a>
+        <hr>
             {% for doc in docs %}
-                <a href="{{ url_for('edit', doc_id=doc.id) }}">{{doc.title}}</a>
-                <hr>
+            <div class="columns">
+                <div class="column">
+                    <a href="{{ url_for('edit', doc_id=doc.id) }}">{{doc.title}}</a>
+                </div>
+                <div class="column">
+                    <a href="{{ url_for('delete_doc', doc_id=doc.id) }}" class="button is-danger">delete</a>
+                </div>
+
+            </div>
 
             {% endfor %}
-        {% endif %}
-        {% if cats %}
-            <h2>Categories are:</h2>
-            <ol>
-                {% for cat in cats %}
-                    <li>{{ cat.name }}</li>
-                {% endfor %}
-            </ol>
         {% endif %}
 
 {% endblock content %}

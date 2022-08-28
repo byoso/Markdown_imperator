@@ -3,7 +3,7 @@
 
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from database.database import db
 
 from markdown import markdown
@@ -35,13 +35,29 @@ def edit(doc_id):
 
     if request.method == "POST":
         title = request.form.get('title')
-        content = request.form.get('text').strip("\n").strip().strip("\T")
+        content = request.form.get('content').strip("\n").strip()
         print(content)
         Doc.update(f"id={doc_id}", title=title, content=content)
 
     doc = Doc.get_id(doc_id)
     doc.render = markdown(doc.content)
     return render_template('edit.html', doc=doc)
+
+
+@app.route("/new_file")
+def new_file():
+    Doc = db().model('document')
+    Doc.insert(title="Untitled", content="")
+    id = Doc.all()[-1].id
+    doc = Doc.get_id(id)
+    return redirect(url_for('edit', doc_id=doc.id))
+
+
+@app.route("/delete/<int:doc_id>")
+def delete_doc(doc_id):
+    db().model("document").delete(f"id={doc_id}")
+    return redirect(url_for('index'))
+
 
 
 if __name__ == "__main__":
