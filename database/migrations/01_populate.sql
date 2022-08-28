@@ -1,12 +1,5 @@
 BEGIN TRANSACTION;
-INSERT INTO "person" VALUES(1,'Irina',24);
-INSERT INTO "person" VALUES(2,'Mikael',43);
-INSERT INTO "person" VALUES(3,'Vladoche',61);
-INSERT INTO "person" VALUES(4,'Loulia',59);
-INSERT INTO "cat" VALUES(1,'Ze Cat',1);
-INSERT INTO "cat" VALUES(2,'Snow ball',1);
-INSERT INTO "cat" VALUES(3,'Miron',2);
-INSERT INTO "cat" VALUES(4,'Cymo',3);
-INSERT INTO "cat" VALUES(5,'Mazette',4);
-INSERT INTO "cat" VALUES(6,'Albator',4);
+INSERT INTO "document" ("title", "content") VALUES('First example','# Big title\nSome text here\n##Smaller title');
+INSERT INTO "category" ("name") VALUES('Favorites');
+INSERT INTO "category" ("name") VALUES('python');
 COMMIT;

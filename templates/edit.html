@@ -1,0 +1,33 @@
+{% extends '_base.html' %}
+
+{% block content %}
+
+<div class="columns">
+    <div class="mr-2 column is-half">
+        <form action="" method="POST">
+            <div class="columns">
+                <div class="column">
+                    <input type="text" name="title" class="input m-1" placeholder="Title" value="{{ doc.title }}">
+                </div>
+                <div class="column is-one-fifth">
+                    <button type="submit" class="button is-primary m-1">Save (ctrl+s)</button>
+
+                </div>
+            </div>
+            <textarea class="textarea" name="text" rows="25" width="45%">{{ doc.content }}</textarea>
+            </textarea>
+        </form>
+
+
+    </div>
+
+    <div class="ml-2 mt-2">
+        {{ doc.render | safe}}
+
+    </div>
+
+
+
+</div>
+
+{% endblock content %}

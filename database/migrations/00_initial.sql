@@ -1,19 +1,25 @@
 BEGIN TRANSACTION;
-CREATE TABLE "person" (
+CREATE TABLE "category" (
 	"id"	INTEGER NOT NULL,
 	"name"	NVARCHAR(80) NOT NULL,
-	"age"	INTEGER,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-CREATE TABLE "cat" (
-	"id"	INTEGER NOT NULL,
-	"name"	NVCHAR(80) NOT NULL,
-	"owner_id"	INTEGER,
-	PRIMARY KEY("id" AUTOINCREMENT),
-	FOREIGN KEY("owner_id") REFERENCES "person"("id") ON DELETE CASCADE
+CREATE TABLE "document" (
+    "id" INTEGER NOT NULL,
+    "title" NVARCHAR(80) NOT NULL,
+    "content" VARCHAR NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
 );
-CREATE INDEX index_person
-ON person ( id COLLATE NOCASE );
-CREATE INDEX index_cat
-ON cat ( id COLLATE NOCASE );
+CREATE TABLE "cat_doc" (
+    "id" INTEGER NOT NULL,
+    "cat_id" INTEGER,
+    "doc_id" INTEGER,
+    PRIMARY KEY ("id" AUTOINCREMENT),
+    FOREIGN KEY("cat_id") REFERENCES "category"("id") ON DELETE CASCADE,
+    FOREIGN KEY("doc_id") REFERENCES "document"("id") ON DELETE CASCADE
+);
+CREATE INDEX index_category
+ON category ( id COLLATE NOCASE );
+CREATE INDEX index_document
+ON document ( id COLLATE NOCASE );
 COMMIT;
