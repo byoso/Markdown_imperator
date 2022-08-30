@@ -57,7 +57,7 @@ def new_window(*item):
         'port': PORT,  # do not change this
         'server_launcher': server_launcher,  # None or server_launcher
         'home_page': "/",
-        'icon': 'FlaskFdIcon',
+        'icon': 'MD_Imperator_icon',
         'is_main': True,  # closing the window closes the entire application
         # If the window has a header bar:
         'header_bar': True,
