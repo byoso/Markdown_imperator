@@ -5,25 +5,21 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <div class="columns">
-    <div class="mr-2 column is-half">
-        <form action="" method="POST">
+    <div class="mr-2 column is-5" id="editor">
             <div class="columns">
-                <div class="column is-four-fifths">
+                <div class="column is-8">
                     <input type="text" name="title" id="title" class="input m-1" placeholder="Title" value="{{ doc.title }}">
                 </div>
-                <div class="column is-one-fifth">
-                    <button type="submit" id="save_button" class="button is-primary m-1">Save (ctrl+s)</button>
+                <div class="column">
+                    <span id="save_button" class="button is-primary m-1" disabled>Save (ctrl+s)</span>
 
                 </div>
             </div>
             <textarea class="textarea" id="content" name="content" rows="25" width="45%">{{ doc.content }}</textarea>
             </textarea>
-        </form>
-
-
     </div>
 
-    <div id="render" class="ml-2 mt-3" style="overflow-y:scroll; height:700px; width:100%">
+    <div id="render" class="ml-2 mt-3 column" style="overflow-y:scroll; height:700px; width:100%">
 
     </div>
 
@@ -35,22 +31,101 @@
 
 {% block script %}
 <script>
-    let content = document.getElementById("content")
+    let history = []
+    let history_index = 0
+    let doc_id = {{ doc.id }}
+    let title = document.getElementById('title')
+    let content = document.getElementById('content')
     let render = document.getElementById('render')
+    let save_button = document.getElementById('save_button')
+    var save_url = "{{ url_for('edit', doc_id=doc.id) }}";
+    history.push({'title': title.value, 'content': content.value})
 
     render.innerHTML = marked.parse(content.value);
 
-    var save_redirect = "{{ url_for('edit', doc_id=doc.id) }}";
+    // realtime render update
     document.addEventListener('keyup', e => {
         render.innerHTML = marked.parse(content.value);
         }
     );
+
+    // save_button function
+    save_button.addEventListener('click', e =>{
+        if (history_index < history.length-1){
+            history = history.slice(0, history_index)
+        }
+
+        history.push({'title': title.value, "content": content.value})
+        var myHeaders = new Headers();
+        var formdata = new FormData();
+        formdata.append("title", title.value);
+        formdata.append("doc_id", doc_id);
+        formdata.append("content", content.value);
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: formdata,
+        redirect: 'follow'
+        };
+
+        fetch(save_url, requestOptions)
+        .then(response => response.text())
+        // .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+
+        history_index ++
+
+        });
+
+    // ctrl+s redirects to save_button function
     document.addEventListener('keydown', e => {
         if (e.ctrlKey && e.key ==='s') {
             e.preventDefault();
             document.getElementById('save_button').click();
+            save_button.setAttribute('disabled', 'disabled');
+        } else {
+            save_button.removeAttribute('disabled');
         }
     });
+
+    // ctrl+p
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key ==='p') {
+            e.preventDefault();
+            document.getElementById('editor').style.display = 'none';
+            document.getElementById('navbar').style.display = 'none';
+            print();
+            document.getElementById('navbar').style.display = 'block';
+            document.getElementById('editor').style.display = 'block';
+        }
+    });
+
+    // ctrl+z
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key ==='z') {
+            e.preventDefault();
+            if (history_index - 1 >= 0) {
+                title.value = history[history_index-1]['title']
+                content.value = history[history_index-1]['content']
+                history_index --
+            }
+        }
+    });
+
+    // ctrl+y
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key ==='y') {
+            e.preventDefault();
+            if (history_index < history.length) {
+                title.value = history[history_index+1]['title']
+                content.value = history[history_index+1]['content']
+                history_index ++
+            }
+        }
+    });
+
+
 
 </script>
 

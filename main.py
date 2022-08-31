@@ -3,7 +3,13 @@
 
 import os
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    jsonify)
 from database.database import db
 
 from markdown import markdown
@@ -36,9 +42,8 @@ def edit(doc_id):
     if request.method == "POST":
         title = request.form.get('title')
         content = request.form.get('content').strip("\n").strip()
-        print(content)
         Doc.update(f"id={doc_id}", title=title, content=content)
-
+        return jsonify(Doc.get_id(doc_id).jsonify())
     doc = Doc.get_id(doc_id)
     doc.render = markdown(doc.content)
     return render_template('edit.html', doc=doc)
@@ -57,7 +62,6 @@ def new_file():
 def delete_doc(doc_id):
     db().model("document").delete(f"id={doc_id}")
     return redirect(url_for('index'))
-
 
 
 if __name__ == "__main__":
