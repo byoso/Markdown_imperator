@@ -15,11 +15,14 @@
 
                 </div>
             </div>
-            <textarea class="textarea" id="content" name="content" rows="25" width="45%">{{ doc.content }}</textarea>
+            <textarea class="textarea" id="content" onscroll="syncScroll(this)" name="content" rows="25" width="45%">{{ doc.content }}</textarea>
             </textarea>
+
+            <div id="printer"></div>
     </div>
 
-    <div id="render" class="ml-2 mt-3 column" style="overflow-y:scroll; word-wrap:break-word; height:700px;">
+    <div id="render" onscroll="syncScroll(this)" class="ml-2 mt-3 pb-4 column"
+    style="overflow-y:scroll; word-wrap:break-word; height:700px;">
 
     </div>
 
@@ -45,7 +48,7 @@
 
     // realtime render update
     document.addEventListener('keyup', e => {
-        render.innerHTML = marked.parse(content.value);
+        render.innerHTML = marked.parse(content.value)+"<br>";
         }
     );
 
@@ -125,7 +128,21 @@
         }
     });
 
-
+    // scrollbars synchro
+    function syncScroll(scroller) {
+    let render_height = render.scrollHeight
+    let render_pos = render.scrollTop
+    let render_frame = render.offsetHeight
+    let content_height = content.scrollHeight
+    let content_pos = content.scrollTop
+    let content_frame = content.offsetHeight
+    if (scroller.id == "content") {
+        var pos = (content_pos + content_frame)*render_height/content_height-render_frame
+        render.scrollTo(0, pos);
+        let ratio = content
+        console.log(content_pos + " / " + content_height + " - " + content_frame)
+    }
+    }
 
 </script>
 
