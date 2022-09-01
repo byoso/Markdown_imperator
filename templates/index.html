@@ -4,25 +4,30 @@
 
 <div id="app">
     <div class="columns">
-        <div class="column is-6">
+        <div class="column is-5">
             <a href="{{ url_for('new_file') }}"
             class="button is-primary is-small is-light is-outlined m-2">+New document</a>
             <hr>
-            <table class="table is-striped is-narrow">
-                <tr v-for="doc in docs" >
-                    <td><a :href="">[[ doc['title'] ]]</a></td>
-                    <td><a :href="'edit/'+[[ doc['id'] ]]"
-                        class="button is-primary is-small is-light is-outlined">Edit</a></td>
-                    <td><a :href="" class="button is-small">Print</a></td>
-                    <td><label class="button is-small is-light is-outlined is-warning"
-                        @click="checked(doc['id'])">Delete</label>
-                    <a :href="'delete/' + [[ doc['id'] ]]" class="button is-danger is-small"
-                     :id="'confirm_'+doc['id']" style="visibility: hidden;">confirm</a></td>
-                </tr>
-            </table>
-        </div>
-        <div class="column">
+            <div  style="overflow-y:scroll; word-wrap:break-word; height:700px;">
+                <table class="table is-striped is-narrow">
+                    <tr v-for="doc in docs" >
+                        <td @click="preview(doc.id)" style="cursor: pointer;">[[ doc.title ]]</td>
+                        <td><a :href="'edit/'+[[ doc.id ]]"
+                            class="button is-primary is-small is-light is-outlined">Edit</a></td>
+                        <td><a :href="" class="button is-small">Print</a></td>
+                        <td><label class="button is-small is-light is-outlined is-warning"
+                            @click="checked(doc.id)">Delete</label>
+                        <a :href="'delete/' + [[ doc.id ]]" class="button is-danger is-small"
+                         :id="'confirm_'+doc.id" style="visibility: hidden;">confirm</a></td>
+                    </tr>
+                </table>
 
+            </div>
+        </div>
+        <div class="column is-7">
+            <div id="render" onscroll="syncScroll(this)" class="ml-2 mt-3 pb-4 column"
+                style="overflow-y:scroll; word-wrap:break-word; height:700px;">
+            </div>
         </div>
     </div>
 
@@ -39,6 +44,7 @@
         data() {
             return {
             docs: docs,
+            preview_html: "",
             }
         },
         methods:{
@@ -54,9 +60,21 @@
                     console.log(del_button.style.visibility)
                 }
             },
+            get_doc_by_id(id){
+                let doc = this.docs.filter( item => item.id == id)[0]
+                console.log(doc.title)
+                return marked.parse(doc.content)+"<br>"
+            },
+            preview(id) {
+                console.log("preview...", id)
+                // this.preview_html = this.get_doc_by_id(id).title
+                document.getElementById("render").innerHTML = this.get_doc_by_id(id)
+            },
+
         },
 
     }).mount('#app')
+
 </script>
 
 {% endblock script %}
