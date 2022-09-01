@@ -2,22 +2,61 @@
 
 {% block content %}
 
+<div id="app">
+    <div class="columns">
+        <div class="column is-6">
+            <a href="{{ url_for('new_file') }}"
+            class="button is-primary is-small is-light is-outlined m-2">+New document</a>
+            <hr>
+            <table class="table is-striped is-narrow">
+                <tr v-for="doc in docs" >
+                    <td><a :href="">[[ doc['title'] ]]</a></td>
+                    <td><a :href="'edit/'+[[ doc['id'] ]]"
+                        class="button is-primary is-small is-light is-outlined">Edit</a></td>
+                    <td><a :href="" class="button is-small">Print</a></td>
+                    <td><label class="button is-small is-light is-outlined is-warning"
+                        @click="checked(doc['id'])">Delete</label>
+                    <a :href="'delete/' + [[ doc['id'] ]]" class="button is-danger is-small"
+                     :id="'confirm_'+doc['id']" style="visibility: hidden;">confirm</a></td>
+                </tr>
+            </table>
+        </div>
+        <div class="column">
 
-        {% if docs %}
-        <a href="{{ url_for('new_file') }}" class="button is-primary m-2">+New document</a>
-        <hr>
-            {% for doc in docs %}
-            <div class="columns">
-                <div class="column">
-                    <a href="{{ url_for('edit', doc_id=doc.id) }}">{{doc.title}}</a>
-                </div>
-                <div class="column">
-                    <a href="{{ url_for('delete_doc', doc_id=doc.id) }}" class="button is-danger">delete</a>
-                </div>
+        </div>
+    </div>
 
-            </div>
-
-            {% endfor %}
-        {% endif %}
 
 {% endblock content %}
+
+{% block script %}
+<script>
+    const docs = {{ docs | safe }};
+    const { createApp } = Vue
+
+    createApp({
+        delimiters: ['[[', ']]'],
+        data() {
+            return {
+            docs: docs,
+            }
+        },
+        methods:{
+            checked(id) {
+                if (this.checked) {
+                    console.log(id)
+                    del_button = document.getElementById('confirm_'+id)
+                    if (del_button.style.visibility == 'hidden'){
+                        del_button.style.visibility = "visible"
+                    } else {
+                        del_button.style.visibility = "hidden"
+                    }
+                    console.log(del_button.style.visibility)
+                }
+            },
+        },
+
+    }).mount('#app')
+</script>
+
+{% endblock script %}

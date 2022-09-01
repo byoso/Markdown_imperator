@@ -2,6 +2,8 @@
 
 *Markdown editor*
 
+**version alpha** 0.0.1
+
 ## Editor shortcuts
 - print -> ctrl+p
 - undo (last save) -> ctrl+z

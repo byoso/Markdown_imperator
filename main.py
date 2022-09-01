@@ -29,7 +29,7 @@ def index():
     categories = db().model('category').all()
 
     context = {
-        'docs': documents,
+        'docs': documents.jsonify(),
         'cats': categories,
     }
     return render_template('index.html', **context)
