@@ -12,8 +12,6 @@ from flask import (
     jsonify)
 from database.database import db
 
-from markdown import markdown
-
 
 app = Flask(
         __name__,
@@ -25,12 +23,12 @@ app = Flask(
 
 @app.route('/')
 def index():
-    documents = db().model('document').all()
-    categories = db().model('category').all()
+    documents = db().model('document').all().order_by('title')
+    categories = db().model('category').all().order_by('name')
 
     context = {
         'docs': documents.jsonify(),
-        'cats': categories,
+        'categories': categories,
     }
     return render_template('index.html', **context)
 
@@ -45,8 +43,10 @@ def edit(doc_id):
         Doc.update(f"id={doc_id}", title=title, content=content)
         return jsonify(Doc.get_id(doc_id).jsonify())
     doc = Doc.get_id(doc_id)
-    doc.render = markdown(doc.content)
-    return render_template('edit.html', doc=doc)
+    context = {
+        'doc': doc,
+    }
+    return render_template('edit.html', **context)
 
 
 @app.route("/new_file")

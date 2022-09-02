@@ -1,6 +1,16 @@
 {% extends '_base.html' %}
 
 {% block content %}
+<style>
+    .table_row {
+        cursor: pointer;
+    }
+    .table_row:hover {
+        background-color: rgb(193, 193, 255);
+    }
+
+</style>
+
 
 <div id="app">
     <div class="columns">
@@ -9,16 +19,17 @@
             class="button is-primary is-small is-light is-outlined m-2">+New document</a>
             <hr>
             <div  style="overflow-y:scroll; word-wrap:break-word; height:700px;">
-                <table class="table is-striped is-narrow">
-                    <tr v-for="doc in docs" >
-                        <td @click="preview(doc.id)" style="cursor: pointer;">[[ doc.title ]]</td>
-                        <td><a :href="'edit/'+[[ doc.id ]]"
-                            class="button is-primary is-small is-light is-outlined">Edit</a></td>
-                        <td><a :href="" class="button is-small">Print</a></td>
+                <table class="table is-narrow">
+                    <tr @mouseover="preview(doc.id);" class="table_row"
+                    v-for="doc in docs">
+                        <td >[[ doc.title ]]</td>
                         <td><label class="button is-small is-light is-outlined is-warning"
                             @click="checked(doc.id)">Delete</label>
                         <a :href="'delete/' + [[ doc.id ]]" class="button is-danger is-small"
                          :id="'confirm_'+doc.id" style="visibility: hidden;">confirm</a></td>
+                        <td><a :href="" class="button is-small">Print</a></td>
+                        <td><a :href="'edit/'+[[ doc.id ]]"
+                            class="button is-primary is-small is-light is-outlined">Edit</a></td>
                     </tr>
                 </table>
 
@@ -36,7 +47,7 @@
 
 {% block script %}
 <script>
-    const docs = {{ docs | safe }};
+    const docs = {{ docs | safe }}
     const { createApp } = Vue
 
     createApp({
@@ -67,10 +78,8 @@
             },
             preview(id) {
                 console.log("preview...", id)
-                // this.preview_html = this.get_doc_by_id(id).title
                 document.getElementById("render").innerHTML = this.get_doc_by_id(id)
             },
-
         },
 
     }).mount('#app')
