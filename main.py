@@ -23,8 +23,8 @@ app = Flask(
 
 @app.route('/')
 def index():
-    documents = db().model('document').all().order_by('title')
-    categories = db().model('category').all().order_by('name')
+    documents = db().model('document').sil.all().order_by('title')
+    categories = db().model('category').sil.all().order_by('name')
 
     context = {
         'docs': documents.jsonify(),
@@ -40,9 +40,9 @@ def edit(doc_id):
     if request.method == "POST":
         title = request.form.get('title')
         content = request.form.get('content').strip("\n").strip()
-        Doc.update(f"id={doc_id}", title=title, content=content)
-        return jsonify(Doc.get_id(doc_id).jsonify())
-    doc = Doc.get_id(doc_id)
+        Doc.sil.update(f"id={doc_id}", title=title, content=content)
+        return jsonify(Doc.sil.get_id(doc_id).jsonify())
+    doc = Doc.sil.get_id(doc_id)
     context = {
         'doc': doc,
     }
@@ -52,15 +52,15 @@ def edit(doc_id):
 @app.route("/new_file")
 def new_file():
     Doc = db().model('document')
-    Doc.insert(title="Untitled", content="")
-    id = Doc.all()[-1].id
-    doc = Doc.get_id(id)
+    Doc.sil.insert(title="Untitled", content="")
+    id = Doc.sil.all()[-1].id
+    doc = Doc.sil.get_id(id)
     return redirect(url_for('edit', doc_id=doc.id))
 
 
 @app.route("/delete/<int:doc_id>")
 def delete_doc(doc_id):
-    db().model("document").delete(f"id={doc_id}")
+    db().model("document").sil.delete(f"id={doc_id}")
     return redirect(url_for('index'))
 
 
