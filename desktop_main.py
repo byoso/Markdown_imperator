@@ -21,6 +21,7 @@ import main as flask_app  # use your own names here
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 PORT = fgl.free_port()
 
+
 # set the server launcher (here for flask)
 def launch_function():
     flask_app.app.run(debug=False, port=PORT)

@@ -1,7 +1,8 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-import os
+# import os
+import webbrowser
 
 from flask import (
     Flask,
@@ -19,6 +20,12 @@ app = Flask(
         static_folder='statics',
         template_folder='templates'
             )
+
+
+@app.route('/external_link/', methods=['POST'])
+def external_link(url):
+    webbrowser.open(url, new=2)
+
 
 
 @app.route('/')
@@ -62,6 +69,28 @@ def new_file():
 def delete_doc(doc_id):
     db().model("document").sil.delete(f"id={doc_id}")
     return redirect(url_for('index'))
+
+
+@app.route("/categories", methods=['GET', 'POST'])
+def categories():
+    if request.method == "POST":
+        category_name = request.form.get('category_name')
+        Category = db().model('category')
+        Category.sil.insert(name=category_name)
+
+    categories = db().model("category").sil.all().order_by('name').jsonify()
+    context = {
+        "categories": categories
+    }
+    return render_template('categories.html', **context)
+
+
+@app.route("/delete_category/<int:pk>", methods=['GET'])
+def delete_category(pk):
+    print("delete ", pk)
+    Category = db().model('category')
+    Category.sil.delete(f"id={pk}")
+    return redirect(url_for('categories'))
 
 
 if __name__ == "__main__":

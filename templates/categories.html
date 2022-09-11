@@ -1,0 +1,60 @@
+{% extends '_base.html' %}
+
+{% block content %}
+
+<div class="">
+    <form action="{{ url_for('categories') }}" method="POST">
+        <h2>add a category</h2>
+        <div class="columns">
+            <div class="column">
+                <input type="text" name="category_name" id="category_name" class="input m-1" placeholder="Untitled" value="">
+            </div>
+            <div class="column">
+                <input type="submit" class="button is-primary m-1" value="+New">
+            </div>
+        </div>
+    </form>
+</div>
+{% if categories %}
+<h3>My categories</h3>
+<table>
+    {% for category in categories %}
+
+    <tr>
+        <td>{{ category.name }}</td>
+        <td>
+            <button class="button is-warning is-small" id="delete_{{category.id}}"
+            onclick="showConfirm({{ category.id }})">delete</button>
+            <a href="{{ url_for('delete_category', pk=category.id) }}"
+            id="confirm_{{category.id}}" style="visibility: hidden;"
+                class="button is-danger is-small" >confirm</a>
+        </td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+{% else %}
+    No category registered yet
+{% endif %}
+
+{% endblock content %}
+
+{% block script %}
+
+<script>
+    var categories = {{ categories | safe }}
+
+    function showConfirm(id){
+        confirm_btn = document.getElementById("confirm_"+id)
+        console.log(confirm_btn.style.visibility)
+        if (confirm_btn.style.visibility == 'hidden'){
+            confirm_btn.style.visibility = "visible"
+        } else {
+            confirm_btn.style.visibility = "hidden"
+        }
+    }
+
+</script>
+
+{% endblock script %}

@@ -54,8 +54,8 @@
         delimiters: ['[[', ']]'],
         data() {
             return {
-            docs: docs,
-            preview_html: "",
+                docs: docs,
+                preview_html: "",
             }
         },
         methods:{
@@ -78,11 +78,21 @@
             },
             preview(id) {
                 console.log("preview...", id)
-                document.getElementById("render").innerHTML = this.get_doc_by_id(id)
+                var render = document.getElementById("render")
+                render.innerHTML = this.get_doc_by_id(id)
+
+                var links = render.getElementsByTagName('a')
+                for (var i=0; i<links.length; i++){
+                    var link = links[i]
+                    links[i].addEventListener('click', event => {
+                        event.preventDefault();
+                    })
+                }
             },
         },
 
     }).mount('#app')
+
 
 </script>
 

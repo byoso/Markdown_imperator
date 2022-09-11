@@ -47,6 +47,14 @@
 
     render.innerHTML = marked.parse(content.value);
 
+    // prevent links to open
+    var links = render.getElementsByTagName('a')
+    for (var i=0; i<links.length; i++){
+        var link = links[i]
+        links[i].addEventListener('click', event => {
+            event.preventDefault();
+        })
+    }
     // realtime render update
     document.addEventListener('keyup', e => {
         render.innerHTML = marked.parse(content.value)+"<br>";
