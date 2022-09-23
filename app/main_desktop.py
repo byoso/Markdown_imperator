@@ -13,7 +13,7 @@ import os
 import flask_fd.gui as fgui
 import flask_fd.launchers as fgl
 
-import main as flask_app  # use your own names here
+import main_web as flask_app  # use your own names here
 
 
 # =====================================================================
@@ -77,4 +77,4 @@ def new_window(*item):
     return fgui.window_builder(**params)
 
 
-new_window()
+window = new_window()

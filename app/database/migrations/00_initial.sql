@@ -8,6 +8,8 @@ CREATE TABLE "document" (
     "id" INTEGER NOT NULL,
     "title" NVARCHAR(80) NOT NULL,
     "content" VARCHAR NULL,
+    "filename" VARCHAR NOT NULL DEFAULT "",
+    "directory" VARCHAR NOT NULL DEFAULT "",
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 CREATE TABLE "cat_doc" (

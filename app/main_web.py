@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-# import os
+import os
 import webbrowser
 
 from flask import (
@@ -12,6 +12,8 @@ from flask import (
     url_for,
     jsonify)
 from database.database import db
+
+from settings import DB_DIR
 
 
 app = Flask(
@@ -93,7 +95,12 @@ def delete_category(pk):
     return redirect(url_for('categories'))
 
 
+
+if not os.path.exists(DB_DIR):
+    os.makedirs(DB_DIR)
+check_db = db()
+check_db.migrate_all()
+
+
 if __name__ == "__main__":
-    check_db = db()
-    check_db.migrate_all()
     app.run(debug=True)
