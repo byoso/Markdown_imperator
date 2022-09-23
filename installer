@@ -4,6 +4,7 @@
 """
 This fast installer is destined to the developpers who want to create
 their own quick installer, with 'geninstaller'.
+https://github.com/byoso/geninstaller
 Just read the comments and complete the informations asked below,
 the magic will do the rest.
 
@@ -16,33 +17,18 @@ independent.
 
 """
 
-# =========== THERE WE GO ===================================
-
-# PLACE THIS FILE IN THE ROOT DIRECTORY OF YOUR PROJECT
-
 # =====================================================================
-# ======= Complete this informations ==================================
 
-# choose a good name, do NOT use underscores here
 NAME = "Markdown Imperator"
-# short description (optionnal), a few words would be fine
+
 DESCRIPTION = "The best markdown editor ever (geninstaller)"
-# The main executable file of the application
-# The path is relative to this directory (BASE_DIR defined below)
+
 EXECUTABLE = "app/main_desktop.py"
-# The icon that your system will use (optionnal, but so much better)
-# The path is relative to this directory (BASE_DIR defined below)
+
 ICON = "app/MD_Imperator_icon"
-# Does your application needs to appear within a terminal ?
-# (usually, a graphical application doesn't need a terminal)
+
 TERMINAL = False
 
-# uncomment the categories in which you want your app to appear in (optionnal).
-# if needed, read this:
-# freedesktop.org doc for categories
-# https://specifications.freedesktop.org/menu-spec/latest/apa.html#main-category-registry
-# additionnal categories
-# https://specifications.freedesktop.org/menu-spec/latest/apas02.html
 CATEGORIES = [
     # "AudioVideo",
     # "Audio",
@@ -60,21 +46,15 @@ CATEGORIES = [
 ]
 
 # ADDITIONAL OPTIONS
-exec_options = ""  # if the exec needs additional options
-
-# if more parameters are needed in the .desktop file, fill this list
-# with the lines you want. e.g: ["foo=bar", "truc=machin"]
+exec_options = ""
 options = [
 ]
 
-# you can add your own PyPI dependencies here if you want:
 dependencies = [
-    'geninstaller>=1.2.2',  # do not remove this line.
+    'geninstaller>=1.2.2',
+    'flask-fd>=1.0.2',
 ]
 
-# you're done ! :)
-
-# = do not touch what is following unless you know what you're doing ==
 # =====================================================================
 
 
