@@ -45,6 +45,7 @@ def index():
 @app.route('/edit/<int:doc_id>', methods=['GET', 'POST'])
 def edit(doc_id):
     Doc = db().model("document")
+    Category = db().model('category')
 
     if request.method == "POST":
         title = request.form.get('title')
@@ -52,8 +53,10 @@ def edit(doc_id):
         Doc.sil.update(f"id={doc_id}", title=title, content=content)
         return jsonify(Doc.sil.get_id(doc_id).jsonify())
     doc = Doc.sil.get_id(doc_id)
+    categories = Category.sil.all().jsonify()
     context = {
         'doc': doc,
+        'categories': categories,
     }
     return render_template('edit.html', **context)
 

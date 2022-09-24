@@ -17,6 +17,9 @@
                 </div>
             </div>
             <textarea class="textarea" id="content" onscroll="syncScroll(this)" name="content" rows="25" width="45%">{{ doc.content }}</textarea>
+            <hr>
+            <h3>Categories</h3>
+            <div id="categories"></div>
 
     </div>
     <div id="render_sc" onscroll="syncScroll(this)" class="ml-2 mt-3 pb-4 column"
@@ -43,7 +46,39 @@
     let render_sc = document.getElementById('render_sc')
     let save_button = document.getElementById('save_button')
     var save_url = "{{ url_for('edit', doc_id=doc.id) }}";
-    history.push({'title': title.value, 'content': content.value})
+    let cats = {{ categories | safe}};
+    let category_selection = document.getElementById('categories');
+
+    // Add the Categories checkboxes
+    function insertAfter(newNode, referenceNode) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+    function newCategoryBox(cat) {
+        let elem = document.createElement('input')
+        elem.type = "checkbox"
+        elem.name = "name_" + cat.id
+        elem.id = "check_" + cat.id
+        return elem
+    };
+    function newCategoryLabel(cat) {
+        let label = document.createElement('label')
+        let toId = "check_" + cat.id
+        label.setAttribute("for", toId)
+        label.innerHTML = cat.name
+        return label
+    };
+
+    cats.forEach(cat => {
+        let elem=  newCategoryBox(cat)
+        elem.style = "margin-right: 10px;"
+        category_selection.appendChild(elem)
+        let label = newCategoryLabel(cat)
+        category_selection.appendChild(label)
+        let lineBack = document.createElement("br")
+        category_selection.appendChild(lineBack)
+        console.log(cat.name)
+    });
+    history.push({'title': title.value, 'content': content.value, 'categories': cats})
 
     render.innerHTML = marked.parse(content.value);
 
