@@ -51,6 +51,8 @@ options = [
 ]
 
 dependencies = [
+    'Flask>=2.2.2',
+    'silly-db>=2.0.1',
     'geninstaller>=1.2.2',
     'flask-fd>=1.0.2',
 ]

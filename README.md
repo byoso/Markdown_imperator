@@ -1,6 +1,6 @@
 # ![logo](https://i.goopics.net/lhw9s2.png) Markdown imperator
 
-*Markdown editor*
+*The best Markdown editor of the empire*
 
 **version alpha** 0.0.1
 
