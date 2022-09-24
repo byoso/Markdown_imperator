@@ -95,7 +95,6 @@ def delete_category(pk):
     return redirect(url_for('categories'))
 
 
-
 if not os.path.exists(DB_DIR):
     os.makedirs(DB_DIR)
 check_db = db()

@@ -23,7 +23,7 @@
                     <tr @mouseover="preview(doc.id);" class="table_row"
                     v-for="doc in docs">
                         <td >[[ doc.title ]]</td>
-                        <td><label class="button is-small is-light is-outlined is-warning"
+                        <td><label class="button is-small is-warning"
                             @click="checked(doc.id)">Delete</label>
                         <a :href="'delete/' + [[ doc.id ]]" class="button is-danger is-small"
                          :id="'confirm_'+doc.id" style="visibility: hidden;">confirm</a></td>
