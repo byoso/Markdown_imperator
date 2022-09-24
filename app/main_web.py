@@ -80,7 +80,7 @@ def categories():
         Category = db().model('category')
         Category.sil.insert(name=category_name)
 
-    categories = db().model("category").sil.all().order_by('name').jsonify()
+    categories = db().model("category").sil.all().order_by('name')
     context = {
         "categories": categories
     }
