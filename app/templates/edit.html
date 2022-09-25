@@ -50,19 +50,21 @@
     let category_selection = document.getElementById('categories');
 
     // Add the Categories checkboxes
+    let catBoxes = []
+
     function insertAfter(newNode, referenceNode) {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
     function newCategoryBox(cat) {
         let elem = document.createElement('input')
         elem.type = "checkbox"
-        elem.name = "name_" + cat.id
-        elem.id = "check_" + cat.id
+        elem.name = cat.name
+        elem.id = cat.id
         return elem
     };
     function newCategoryLabel(cat) {
         let label = document.createElement('label')
-        let toId = "check_" + cat.id
+        let toId = cat.id
         label.setAttribute("for", toId)
         label.innerHTML = cat.name
         return label
@@ -72,13 +74,14 @@
         let elem=  newCategoryBox(cat)
         elem.style = "margin-right: 10px;"
         category_selection.appendChild(elem)
+        catBoxes.push(elem)
         let label = newCategoryLabel(cat)
         category_selection.appendChild(label)
         let lineBack = document.createElement("br")
         category_selection.appendChild(lineBack)
         console.log(cat.name)
     });
-    history.push({'title': title.value, 'content': content.value, 'categories': cats})
+    history.push({'title': title.value, 'content': content.value})
 
     render.innerHTML = marked.parse(content.value);
 
@@ -103,16 +106,25 @@
         }
 
         history.push({'title': title.value, "content": content.value})
-        var myHeaders = new Headers();
-        var formdata = new FormData();
-        formdata.append("title", title.value);
-        formdata.append("doc_id", doc_id);
-        formdata.append("content", content.value);
+        var headers = new Headers();
+        var datas = new FormData();
+        datas.append('title', title.value)
+        datas.append('doc_id', doc_id)
+        datas.append('content', content.value)
+        categories = []
+        catBoxes.forEach(elem => {
+            categories.push([elem.id, elem.checked])
+        })
+        console.log(categories) // debug
+        categories = JSON.stringify(categories)
+        datas.append('categories', categories)
+
+        console.log(datas)
 
         var requestOptions = {
         method: 'POST',
-        headers: myHeaders,
-        body: formdata,
+        headers: headers,
+        body: datas,
         redirect: 'follow'
         };
 

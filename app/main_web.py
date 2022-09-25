@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import os
+import json
 import webbrowser
 
 from flask import (
@@ -46,14 +47,34 @@ def index():
 def edit(doc_id):
     Doc = db().model("document")
     Category = db().model('category')
+    Cat_doc = db().model("cat_doc")
 
     if request.method == "POST":
+        categories = json.loads(request.form.get('categories'))
+        for category in categories:
+            print(category)
+            if category[1] == True:
+                if not Cat_doc.sil.filter(f"cat_id={category[0]} AND doc_id={doc_id}").exists():
+                    Cat_doc.sil.insert(cat_id=category[0], doc_id=doc_id)
+            else:
+                Cat_doc.sil.delete(f"cat_id={category[0]} AND doc_id={doc_id}")
         title = request.form.get('title')
         content = request.form.get('content').strip("\n").strip()
         Doc.sil.update(f"id={doc_id}", title=title, content=content)
         return jsonify(Doc.sil.get_id(doc_id).jsonify())
+
     doc = Doc.sil.get_id(doc_id)
-    categories = Category.sil.all().jsonify()
+    categories = Category.sil.all().order_by("name")
+    checked_cats = db().select(f"cat_id FROM cat_doc WHERE doc_id={doc_id}")
+    checked_ids = [cat.cat_id for cat in checked_cats]
+    for cat in categories:
+        if cat.id in checked_ids:
+            cat.is_checked = True
+        else:
+            cat.is_checked = False
+
+    categories = categories.jsonify()
+
     context = {
         'doc': doc,
         'categories': categories,
