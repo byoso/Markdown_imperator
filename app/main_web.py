@@ -94,6 +94,7 @@ def new_file():
 @app.route("/delete/<int:doc_id>")
 def delete_doc(doc_id):
     db().model("document").sil.delete(f"id={doc_id}")
+    db().model('cat_doc').sil.delete(f"doc_id={doc_id}")
     return redirect(url_for('index'))
 
 
@@ -115,6 +116,8 @@ def categories():
 def delete_category(pk):
     print("delete ", pk)
     Category = db().model('category')
+    Cat_doc = db().model('cat_doc')
+    Cat_doc.sil.delete(f"cat_id={pk}")
     Category.sil.delete(f"id={pk}")
     return redirect(url_for('categories'))
 

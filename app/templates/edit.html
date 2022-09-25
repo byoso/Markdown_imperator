@@ -12,11 +12,12 @@
                     <input type="text" name="title" id="title" class="input m-1" placeholder="Title" value="{{ doc.title }}">
                 </div>
                 <div class="column">
-                    <span id="save_button" class="button is-primary m-1" disabled>Save (ctrl+s)</span>
+                    <span id="save_button" class="button is-primary m-1">Save (ctrl+s)</span>
 
                 </div>
             </div>
             <textarea class="textarea" id="content" onscroll="syncScroll(this)" name="content" rows="25" width="45%">{{ doc.content }}</textarea>
+            <button onclick="toClipboard()" id="copy" class="button is-small">copy to clipboard</button>
             <hr>
             <h3>Categories</h3>
             <div id="categories"></div>
@@ -56,10 +57,14 @@
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
     function newCategoryBox(cat) {
+        console.log(cat)
         let elem = document.createElement('input')
         elem.type = "checkbox"
         elem.name = cat.name
         elem.id = cat.id
+        if (cat.is_checked) {
+            elem.checked = true
+        }
         return elem
     };
     function newCategoryLabel(cat) {
@@ -99,11 +104,27 @@
         }
     );
 
+    // Animation
+    function animation(id) {
+        let elem = document.getElementById(id)
+        elem.classList.remove('validate');
+        void elem.offsetWidth;
+        elem.classList.add('validate');
+        }
+
+    // copy to clipboard
+    function toClipboard() {
+        var copyText = document.getElementById("content");
+        navigator.clipboard.writeText(copyText.value);
+        animation("copy")
+    }
+
     // save_button function
     save_button.addEventListener('click', e =>{
         if (history_index < history.length-1){
             history = history.slice(0, history_index)
         }
+        animation("save_button")
 
         history.push({'title': title.value, "content": content.value})
         var headers = new Headers();
@@ -137,14 +158,23 @@
 
         });
 
+    // tab modification
+    document.addEventListener('keydown', e => {
+        if (e.key === "Tab") {
+            e.preventDefault();
+            let start = e.target.selectionStart;
+            let val = e.target.value;
+            e.target.value = val.substr(0, start) + "    " + val.substr(e.target.selectionEnd);
+            e.target.selectionStart = e.target.selectionEnd = start + 4;
+            // document.getElementById('save_button').click();
+        }
+    });
+
     // ctrl+s redirects to save_button function
     document.addEventListener('keydown', e => {
         if (e.ctrlKey && e.key ==='s') {
             e.preventDefault();
             document.getElementById('save_button').click();
-            save_button.setAttribute('disabled', 'disabled');
-        } else {
-            save_button.removeAttribute('disabled');
         }
     });
 

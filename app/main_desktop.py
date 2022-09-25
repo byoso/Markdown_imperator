@@ -54,6 +54,7 @@ def new_window(*item):
     params = {
         # Minimum settings
         'title': "MarkDown Imperator",
+        'subtitle': "The best markdown editor of the empire",
         'base_dir': BASE_DIR,  # do not change this
         'port': PORT,  # do not change this
         'server_launcher': server_launcher,  # None or server_launcher
@@ -62,7 +63,6 @@ def new_window(*item):
         'is_main': True,  # closing the window closes the entire application
         # If the window has a header bar:
         'header_bar': True,
-        'subtitle': None,
         'buttons_left': [
             # comment those you don't want, change the order as you like
             'hb_home',
