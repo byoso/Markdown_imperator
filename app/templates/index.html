@@ -18,6 +18,7 @@
             <a href="{{ url_for('new_file') }}"
             class="button is-primary is-small is-light is-outlined m-2">+New document</a>
             <hr>
+
             <div  style="overflow-y:scroll; word-wrap:break-word; height:700px;">
                 <table class="table is-narrow">
                     <tr @mouseover="preview(doc.id);" class="table_row"
@@ -47,6 +48,7 @@
 
 {% block script %}
 <script>
+
     const docs = {{ docs | safe }}
     const { createApp } = Vue
 
