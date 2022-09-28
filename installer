@@ -21,9 +21,9 @@ independent.
 
 NAME = "Markdown Imperator"
 
-DESCRIPTION = "The best markdown editor ever (geninstaller)"
+DESCRIPTION = "The best markdown editor of the empire"
 
-EXECUTABLE = "app/main_desktop.py"
+EXECUTABLE = "app/mdi_main.py"
 
 ICON = "app/MD_Imperator_icon"
 
@@ -48,6 +48,7 @@ CATEGORIES = [
 # ADDITIONAL OPTIONS
 exec_options = ""
 options = [
+    "Keywords=geninstaller;"
 ]
 
 dependencies = [

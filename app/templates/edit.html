@@ -50,6 +50,9 @@
     let cats = {{ categories | safe}};
     let category_selection = document.getElementById('categories');
 
+    history.push({'title': title.value, "content": content.value})
+    history_index ++
+
     // Add the Categories checkboxes
     let catBoxes = []
 
@@ -86,7 +89,6 @@
         category_selection.appendChild(lineBack)
         console.log(cat.name)
     });
-    history.push({'title': title.value, 'content': content.value})
 
     render.innerHTML = marked.parse(content.value);
 

@@ -19,7 +19,6 @@ from settings import DB_DIR
 
 app = Flask(
         __name__,
-        static_url_path='',
         static_folder='statics',
         template_folder='templates'
             )
