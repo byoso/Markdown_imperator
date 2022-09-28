@@ -1,56 +1,3 @@
-{% extends '_base.html' %}
-
-{% block head %}
-
-
-{% endblock head %}
-
-
-{% block content %}
-
-
-<div id="printer" style="word-wrap:break-word;"></div>
-
-<div class="columns">
-    <div class="mr-2 column is-5" id="editor">
-            <div class="columns">
-                <div class="column is-8">
-                    <input type="text" name="title" id="title" class="input m-1" placeholder="Title" value="{{ doc.title }}">
-                </div>
-                <div class="column">
-                    <span id="save_button" class="button is-primary m-1">Save (ctrl+s)</span>
-
-                </div>
-            </div>
-            <textarea class="textarea" id="content" onscroll="syncScroll(this)" name="content" rows="25" width="45%">{{ doc.content }}</textarea>
-            <span onclick="toClipboard()" id="copy" class="button is-small">copy to clipboard</span>
-            <hr>
-            <div class="card">
-                <header class="card-header collapsible">
-                    <button class="card-header-title ">
-                        Categories +
-                    </button>
-                </header>
-                <!-- <button type="button" class="collapsible active">Categories</button> -->
-                <div id="categories" class="content" style="display:none;"></div>
-            </div>
-
-    </div>
-    <div id="render_sc" onscroll="syncScroll(this)" class="ml-2 mt-3 pb-4 column"
-        style="overflow-y:scroll; word-wrap:break-word; height:700px;">
-        <div id="render">
-
-        </div>
-
-    </div>
-
-</div>
-
-
-{% endblock content %}
-
-{% block script %}
-<script>
 
     var coll = document.getElementsByClassName("collapsible");
     var i;
@@ -265,8 +212,3 @@
         console.log(content_pos + " / " + content_height + " - " + content_frame)
     }
     }
-
-</script>
-
-
-{% endblock script %}
