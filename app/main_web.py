@@ -34,7 +34,6 @@ def external_link(url):
 def index():
     documents = db().model('document').sil.all().order_by('title')
     categories = db().model('category').sil.all().order_by('name')
-
     context = {
         'docs': documents.jsonify(),
         'categories': categories.jsonify(),

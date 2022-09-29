@@ -26,10 +26,13 @@
                     </button>
                 </header>
                 <div id="filters" style="display:none;">
+                    <input type="checkbox" id="all">
+                    <label for="all" class="ml-1"><strong> check / uncheck all filters</strong></label>
                     <div v-for="category in categories">
-                        <input type="checkbox" id="cat+[[category.id]]" name="[[category.name]]">
-                        <label for="cat+[[category.id]]" class="ml-1">[[category.name]]</label>
+                        <input type="checkbox" :id="'cat'+[[category.id]]" name="[[category.name]]">
+                        <label for="'cat'+[[category.id]]" class="ml-1" @click="check_the_box('cat'+[[category.id]])">[[category.name]]</label>
                     </div>
+                    <button class="button is-fullwidth">apply filters</button>
                 </div>
             </div>
             <hr>
@@ -42,7 +45,7 @@
                             @click="checked(doc.id)">Delete</label>
                         <a :href="'delete/' + [[ doc.id ]]" class="button is-danger is-small ml-1"
                          :id="'confirm_'+doc.id" style="visibility: hidden;">confirm</a></td>
-                        <td><a :href="" class="button is-small">Print</a></td>
+                        <td><a href="" class="button is-small">Print</a></td>
                         <td><a :href="'edit/'+[[ doc.id ]]"
                             class="button is-primary is-small is-light is-outlined">Edit</a></td>
                     </tr>
@@ -84,6 +87,15 @@
                 } else {
                 content.style.display = "block";
                 }
+            },
+            check_the_box(id){
+                console.log(id)
+                var box = document.getElementById(id);
+                if (box.checked === true) {
+                    box.checked = false;
+                } else {
+                    box.checked = true;
+                };
             },
             checked(id) {
                 if (this.checked) {
