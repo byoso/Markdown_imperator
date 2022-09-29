@@ -17,8 +17,22 @@
         <div class="column is-5">
             <a href="{{ url_for('new_file') }}"
             class="button is-primary is-small is-light is-outlined m-2">+New document</a>
-            <hr>
 
+
+            <div class="card">
+                <header class="card-header" @click="show_hide('filters')">
+                    <button class="card-header-title ">
+                        Filters +
+                    </button>
+                </header>
+                <div id="filters" style="display:none;">
+                    <div v-for="category in categories">
+                        <input type="checkbox" id="cat+[[category.id]]" name="[[category.name]]">
+                        <label for="cat+[[category.id]]" class="ml-1">[[category.name]]</label>
+                    </div>
+                </div>
+            </div>
+            <hr>
             <div  style="overflow-y:scroll; word-wrap:break-word; height:700px;">
                 <table class="table is-narrow">
                     <tr @mouseover="preview(doc.id);" class="table_row"
@@ -50,6 +64,7 @@
 <script>
 
     const docs = {{ docs | safe }}
+    let categories = {{ categories | safe }}
     const { createApp } = Vue
 
     createApp({
@@ -57,10 +72,19 @@
         data() {
             return {
                 docs: docs,
+                categories: categories,
                 preview_html: "",
             }
         },
         methods:{
+            show_hide(id){
+                var content = document.getElementById(id);
+                if (content.style.display === "block") {
+                content.style.display = "none";
+                } else {
+                content.style.display = "block";
+                }
+            },
             checked(id) {
                 if (this.checked) {
                     console.log(id)
@@ -79,7 +103,6 @@
                 return marked.parse(doc.content)+"<br>"
             },
             preview(id) {
-                console.log("preview...", id)
                 var render = document.getElementById("render")
                 render.innerHTML = this.get_doc_by_id(id)
 

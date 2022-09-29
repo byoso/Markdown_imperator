@@ -37,7 +37,7 @@ def index():
 
     context = {
         'docs': documents.jsonify(),
-        'categories': categories,
+        'categories': categories.jsonify(),
     }
     return render_template('index.html', **context)
 

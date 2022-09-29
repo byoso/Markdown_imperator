@@ -26,12 +26,11 @@
             <span onclick="toClipboard()" id="copy" class="button is-small">copy to clipboard</span>
             <hr>
             <div class="card">
-                <header class="card-header collapsible">
+                <header class="card-header" id="categories_button">
                     <button class="card-header-title ">
                         Categories +
                     </button>
                 </header>
-                <!-- <button type="button" class="collapsible active">Categories</button> -->
                 <div id="categories" class="content" style="display:none;"></div>
             </div>
 
@@ -51,21 +50,16 @@
 
 {% block script %}
 <script>
-
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
-      coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var content = this.nextElementSibling;
+    // categories collapsible
+    var coll = document.getElementById("categories_button");
+    coll.addEventListener("click", function() {
+        var content = document.getElementById('categories')
         if (content.style.display === "block") {
-          content.style.display = "none";
+            content.style.display = "none";
         } else {
-          content.style.display = "block";
+            content.style.display = "block";
         }
-      });
-    }
+    });
 
 
     let history = []
