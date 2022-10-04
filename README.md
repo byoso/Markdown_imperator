@@ -1,6 +1,6 @@
 # ![logo](https://i.goopics.net/lhw9s2.png) Markdown imperator
 
-*The best Markdown editor of the empire*
+*Markdown editor*
 
 **version alpha** 0.0.1
 
@@ -12,7 +12,4 @@
 ## *WIP*
 
 TODO:
-
-- add a categories system
-- copy content to clipboard
-- replace the tab key by 4 x spaces
+- add a categories system (WIP: 60%)
