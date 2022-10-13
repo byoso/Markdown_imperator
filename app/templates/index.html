@@ -28,11 +28,16 @@
                 <div id="filters" style="display:none;">
                     <input type="checkbox" id="all">
                     <label for="all" class="ml-1"><strong> check / uncheck all filters</strong></label>
-                    <div v-for="category in categories">
-                        <input type="checkbox" :id="'cat'+[[category.id]]" name="[[category.name]]">
-                        <label for="'cat'+[[category.id]]" class="ml-1" @click="check_the_box('cat'+[[category.id]])">[[category.name]]</label>
-                    </div>
-                    <button class="button is-fullwidth" @click="applyFilters()">apply filters</button>
+
+                    <form action="{{ url_for('index') }}" method="post">
+                        <div v-for="category in categories">
+                            <input type="checkbox" :id="'cat'+[[category.id]]" name="filters" :value="[[category.id]]">
+                            <label for="'cat'+[[category.id]]" class="ml-1" @click="check_the_box('cat'+[[category.id]], [[category.id]])">[[category.name]]</label>
+                        </div>
+                        <button class="button is-fullwidth" >apply filters</button>
+
+                    </form>
+
                 </div>
             </div>
             <hr>
@@ -42,7 +47,7 @@
                     v-for="doc in docs">
                         <td >[[ doc.title ]]</td>
                         <td><label class="button is-small is-warning"
-                            @click="checked(doc.id)">Delete</label>
+                            @click="delete_button(doc.id)">Delete</label>
                         <a :href="'delete/' + [[ doc.id ]]" class="button is-danger is-small ml-1"
                          :id="'confirm_'+doc.id" style="visibility: hidden;">confirm</a></td>
                         <td><a href="" class="button is-small">Print</a></td>
@@ -76,7 +81,6 @@
             return {
                 docs: docs,
                 categories: categories,
-                filters: {},
                 preview_html: "",
             }
         },
@@ -89,29 +93,23 @@
                 content.style.display = "block";
                 }
             },
-            check_the_box(id){
-                console.log(id)
-                var box = document.getElementById(id);
+            check_the_box(elem_id, id){
+                var box = document.getElementById(elem_id);
                 if (box.checked === true) {
+                    console.log("id unchecked: " + id)
                     box.checked = false;
                 } else {
+                    console.log("id checked: " + id)
                     box.checked = true;
                 };
             },
-            checked(id) {
-                if (this.checked) {
-                    console.log(id)
-                    del_button = document.getElementById('confirm_'+id)
-                    if (del_button.style.visibility == 'hidden'){
-                        del_button.style.visibility = "visible"
-                    } else {
-                        del_button.style.visibility = "hidden"
-                    }
-                    console.log(del_button.style.visibility)
+            delete_button(id) {
+                del_button = document.getElementById('confirm_'+id)
+                if (del_button.style.visibility == 'hidden'){
+                    del_button.style.visibility = "visible"
+                } else {
+                    del_button.style.visibility = "hidden"
                 }
-            },
-            applyFilters(){
-                console.log(this.filters)
             },
             get_doc_by_id(id){
                 let doc = this.docs.filter( item => item.id == id)[0]
@@ -133,7 +131,10 @@
         },
         mounted() {
             this.categories.forEach(category => {
-                this.filters.push({'id': category.id, 'elem_id': 'cat'+category.id, 'checked': category.checked})
+                if (category.checked === 1){
+                    var box = document.getElementById('cat' + category.id)
+                    box.checked = true
+                }
             });
         },
     }).mount('#app')

@@ -29,9 +29,19 @@ def external_link(url):
     webbrowser.open(url, new=2)
 
 
-
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    if request.method == "POST":
+        print("POST from index !")
+        filters = [int(filter) for filter in request.form.getlist('filters')]
+
+        Category = db().model('category')
+        for cat in Category.sil.all():
+            if cat.id in filters:
+                Category.sil.update(f"id={cat.id}", checked=1)
+            else:
+                Category.sil.update(f"id={cat.id}", checked=0)
+
     # display checked categories
     documents = db().select(
         "DISTINCT "
