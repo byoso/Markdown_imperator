@@ -32,7 +32,7 @@
                         <input type="checkbox" :id="'cat'+[[category.id]]" name="[[category.name]]">
                         <label for="'cat'+[[category.id]]" class="ml-1" @click="check_the_box('cat'+[[category.id]])">[[category.name]]</label>
                     </div>
-                    <button class="button is-fullwidth">apply filters</button>
+                    <button class="button is-fullwidth" @click="applyFilters()">apply filters</button>
                 </div>
             </div>
             <hr>
@@ -76,6 +76,7 @@
             return {
                 docs: docs,
                 categories: categories,
+                filters: {},
                 preview_html: "",
             }
         },
@@ -109,6 +110,9 @@
                     console.log(del_button.style.visibility)
                 }
             },
+            applyFilters(){
+                console.log(this.filters)
+            },
             get_doc_by_id(id){
                 let doc = this.docs.filter( item => item.id == id)[0]
                 console.log(doc.title)
@@ -127,7 +131,11 @@
                 }
             },
         },
-
+        mounted() {
+            this.categories.forEach(category => {
+                this.filters.push({'id': category.id, 'elem_id': 'cat'+category.id, 'checked': category.checked})
+            });
+        },
     }).mount('#app')
 
 

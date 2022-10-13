@@ -32,7 +32,17 @@ def external_link(url):
 
 @app.route('/')
 def index():
-    documents = db().model('document').sil.all().order_by('title')
+    # display checked categories
+    documents = db().select(
+        "DISTINCT "
+        "document.id, document.title, document.content "
+        "FROM document JOIN cat_doc ON document.id=cat_doc.doc_id "
+        "JOIN category ON cat_doc.cat_id=category.id "
+        "WHERE category.checked=true"
+        )
+    # display all documents
+    # documents = db().model('document').sil.all().order_by('title')
+
     categories = db().model('category').sil.all().order_by('name')
     context = {
         'docs': documents.jsonify(),
