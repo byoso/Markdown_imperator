@@ -26,12 +26,12 @@
                     </button>
                 </header>
                 <div id="filters" style="display:none;">
-                    <input type="checkbox" id="all">
-                    <label for="all" class="ml-1"><strong> check / uncheck all filters</strong></label>
+                    <input type="checkbox" id="check_all" @click="check_all()">
+                    <label for="check_all" class="ml-1" @click="check_all()"><strong> check / uncheck all filters</strong></label>
 
                     <form action="{{ url_for('index') }}" method="post">
                         <div v-for="category in categories">
-                            <input type="checkbox" :id="'cat'+[[category.id]]" name="filters" :value="[[category.id]]">
+                            <input type="checkbox" :id="'cat'+[[category.id]]" name="filters" :value="[[category.id]]" class="filter">
                             <label for="'cat'+[[category.id]]" class="ml-1" @click="check_the_box('cat'+[[category.id]], [[category.id]])">[[category.name]]</label>
                         </div>
                         <button class="button is-fullwidth" >apply filters</button>
@@ -102,6 +102,20 @@
                     console.log("id checked: " + id)
                     box.checked = true;
                 };
+            },
+            check_all(){
+                console.log("check all")
+                var all_box = document.getElementById('check_all')
+                var filters = document.getElementsByClassName('filter')
+                if (all_box.checked === true){
+                    Array.from(filters).forEach(filter => {
+                        filter.checked = true
+                    })
+                }else {
+                    Array.from(filters).forEach(filter => {
+                        filter.checked = false
+                    })
+                }
             },
             delete_button(id) {
                 del_button = document.getElementById('confirm_'+id)
