@@ -2,14 +2,15 @@
 
 *Markdown editor*
 
-**version alpha** 0.0.1
+**version** 1.0.0
 
-## Editor shortcuts
+## Editor mode's shortcuts
 - print -> ctrl+p
 - undo (last save) -> ctrl+z
 - redo -> ctrl+y
 
-## *WIP*
 
 TODO:
-- add a categories system (WIP: 60%)
+- bug to fix: printing should not work properly in some rare cases
+- connect the 'print' button to somthing
+- complete the menus and other fancy things

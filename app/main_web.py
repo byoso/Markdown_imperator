@@ -4,6 +4,7 @@
 import os
 import json
 import webbrowser
+from silly_db.selections import Selection
 
 from flask import (
     Flask,
@@ -15,6 +16,7 @@ from flask import (
 from database.database import db
 
 from settings import DB_DIR
+from helpers import intersection
 
 
 app = Flask(
@@ -31,8 +33,9 @@ def external_link(url):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    filters = []
+    selected_documents = Selection()
     if request.method == "POST":
-        print("POST from index !")
         filters = [int(filter) for filter in request.form.getlist('filters')]
 
         Category = db().model('category')
@@ -42,31 +45,36 @@ def index():
             else:
                 Category.sil.update(f"id={cat.id}", checked=0)
 
-    # display checked categories
-    sql_request = (
-        "DISTINCT "
-        "document.id, document.title, document.content "
-        "FROM document JOIN cat_doc ON document.id=cat_doc.doc_id "
-        "JOIN category ON cat_doc.cat_id=category.id "
-        "WHERE category.checked=true"
+    # filtering documents that are in all the filters selected
+    if len(filters) == 0:
+        selected_documents = db().model('document').sil.all().order_by('title')
+    else:
+        results = []
+        ids = []
+        for id in filters:
+            documents = db().select(
+                "DISTINCT "
+                "document.id "
+                "FROM document JOIN cat_doc ON document.id=cat_doc.doc_id "
+                f"AND cat_id={id} "
+            )
+            results.append(documents)
+        for result in results:
+            ids.append([item.id for item in result.items])
+        ids = intersection(*ids)
 
-
-        # "DISTINCT "
-        # "document.id, document.title, document.content "
-        # "FROM document JOIN cat_doc ON document.id=cat_doc.doc_id "
-        # "JOIN category ON cat_doc.cat_id=category.id "
-        # "WHERE category.checked=true"
-    )
-    documents = db().select(
-        sql_request
-
+        sql_ids = ""
+        for id in ids:
+            sql_ids += f"'{id}',"
+        sql_ids = sql_ids[:-1]
+        selected_documents = db().select(
+            "id, title, content "
+            f"FROM document WHERE id IN ({sql_ids}) "
         )
-    # display all documents
-    # documents = db().model('document').sil.all().order_by('title')
 
     categories = db().model('category').sil.all().order_by('name')
     context = {
-        'docs': documents.jsonify(),
+        'docs': selected_documents.order_by('title').jsonify(),
         'categories': categories.jsonify(),
     }
     return render_template('index.html', **context)
@@ -81,7 +89,6 @@ def edit(doc_id):
     if request.method == "POST":
         categories = json.loads(request.form.get('categories'))
         for category in categories:
-            print(category)
             if category[1] == True:
                 if not Cat_doc.sil.filter(f"cat_id={category[0]} AND doc_id={doc_id}").exists():
                     Cat_doc.sil.insert(cat_id=category[0], doc_id=doc_id)
