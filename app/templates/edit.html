@@ -22,10 +22,7 @@
 
                 </div>
             </div>
-            <textarea class="textarea" id="content" onscroll="syncScroll(this)" name="content" rows="25" width="45%">{{ doc.content }}</textarea>
-            <span onclick="toClipboard()" id="copy" class="button is-small">copy to clipboard</span>
-            <hr>
-            <div class="card">
+            <div class="card mb-2">
                 <header class="card-header" id="categories_button">
                     <button class="card-header-title ">
                         Categories +
@@ -33,11 +30,17 @@
                 </header>
                 <div id="categories" class="content" style="display:none;"></div>
             </div>
+            <textarea class="textarea" id="content" onscroll="syncScroll(this)" name="content" rows="25" width="45%">{{ doc.content }}</textarea>
+            <span onclick="toClipboard()" id="copy" class="button is-small">copy to clipboard</span>
+            <hr>
 
     </div>
-    <div id="render_sc" onscroll="syncScroll(this)" class="ml-2 mt-3 pb-4 column"
-        style="overflow-y:scroll; word-wrap:break-word; height:700px;">
-        <div id="render">
+    <div class="column">
+        <div id="render_sc" onscroll="syncScroll(this)" class="ml-2 mt-3 pb-4"
+            style="overflow-y:scroll; word-wrap:break-word; height:800px;">
+            <div id="render">
+
+            </div>
 
         </div>
 
@@ -114,7 +117,7 @@
         console.log(cat.name)
     });
 
-    render.innerHTML = marked.parse(content.value);
+    render.innerHTML = marked.parse(content.value)+"<br>"+"<hr>";
 
     // prevent links to open
     var links = render.getElementsByTagName('a')
@@ -126,7 +129,7 @@
     }
     // realtime render update
     document.addEventListener('keyup', e => {
-        render.innerHTML = marked.parse(content.value)+"<br>";
+        render.innerHTML = marked.parse(content.value)+"<br>"+"<hr>";
         }
     );
 
@@ -252,9 +255,23 @@
     let content_frame = content.offsetHeight
     if (scroller.id == "content") {
         var pos = (content_pos + content_frame)*render_height/content_height-render_frame
-        render_sc.scrollTo(0, pos);
-        let ratio = content
-        console.log(content_pos + " / " + content_height + " - " + content_frame)
+        if (pos <= 0){
+            render_sc.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            })
+        } else if (pos > 4200){
+            render_sc.scrollTo({
+                top: 8000,
+                behavior: "smooth",
+            })
+        }else {
+            render_sc.scrollTo({
+                top: pos,
+            });
+            let ratio = content
+            console.log(content_pos + " / " + content_height + " - " + content_frame)
+        }
     }
     }
 
