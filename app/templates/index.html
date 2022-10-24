@@ -50,7 +50,7 @@
                             @click="delete_button(doc.id)">Delete</label>
                         <a :href="'delete/' + [[ doc.id ]]" class="button is-danger is-small ml-1"
                          :id="'confirm_'+doc.id" style="visibility: hidden;">confirm</a></td>
-                        <td><a href="" class="button is-small">Print</a></td>
+                        <td><a :href="'print_content/'+ [[doc.id]]" target="_blank" class="button is-small">Print</a></td>
                         <td><a :href="'edit/'+[[ doc.id ]]"
                             class="button is-primary is-small is-light is-outlined">Edit</a></td>
                     </tr>

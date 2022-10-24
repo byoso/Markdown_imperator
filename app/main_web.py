@@ -117,6 +117,15 @@ def edit(doc_id):
     }
     return render_template('edit.html', **context)
 
+@app.route("/print_content/<int:doc_id>")
+def print_content(doc_id):
+    Document = db().model('document')
+    document = Document.sil.get_id(doc_id)
+
+    context = {
+        'document': document,
+    }
+    return render_template('print_content.html', **context)
 
 @app.route("/new_file")
 def new_file():

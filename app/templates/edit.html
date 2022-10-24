@@ -209,15 +209,8 @@
     document.addEventListener('keydown', e => {
         if (e.ctrlKey && e.key ==='p') {
             e.preventDefault();
-            printer.innerHTML = render.innerHTML;
-            document.getElementById('editor').style.display = 'none';
-            document.getElementById('navbar').style.display = 'none';
-            document.getElementById('render_sc').style.display = 'none';
-            window.print();
-            document.getElementById('navbar').style.display = 'block';
-            document.getElementById('editor').style.display = 'block';
-            document.getElementById('render_sc').style.display = 'block';
-            printer.innerHTML = "";
+            let print_url = "{{ url_for('print_content', doc_id=doc.id) }}";
+            window.open(print_url, '_blank').focus();
         }
     });
 
