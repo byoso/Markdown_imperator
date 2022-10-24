@@ -11,6 +11,4 @@
 
 
 TODO:
-- bug to fix: printing should not work properly in some rare cases
-- connect the 'print' button to somthing
 - complete the menus and other fancy things
