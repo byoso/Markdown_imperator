@@ -17,3 +17,11 @@ def db():
         file=os.path.join(DB_DIR, current_db),
         migrations_dir="migrations")
     return db
+
+def create_new_database(new_db_name):
+    db = DB(
+        base=BASE_DIR,
+        file=os.path.join(DB_DIR, new_db_name),
+        migrations_dir="migrations"
+    )
+    return db

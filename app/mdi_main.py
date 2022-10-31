@@ -43,22 +43,23 @@ def open_default(*args):
 
 # Browser
 
-def new_browser(*args):
-    """Creates a browser"""
-    browser = fgui.SillyBrowser(
-        base_dir=BASE_DIR,  # required for correct icon behaviour
-        port=PORT,
-        home_page="/",
-        icon='MD_Imperator_icon',
-        is_main=False,  # closing a main widget closes the entire application
-        )
-    return browser
+# def new_browser(*args):
+#     """Creates a browser"""
+#     browser = fgui.SillyBrowser(
+#         base_dir=BASE_DIR,  # required for correct icon behaviour
+#         port=PORT,
+#         home_page="/",
+#         icon='MD_Imperator_icon',
+#         is_main=False,  # closing a main widget closes the entire application
+#         )
+#     return browser
 
 
 # Indicator
 
 def new_indicator():
     indicator = fgui.Indicator(
+        name="Markdown Imperator",
         base_dir=BASE_DIR,  # required for correct icon behaviour
         icon='MD_Imperator_icon',  # required
         label=None,  # str or None
@@ -73,6 +74,7 @@ def new_indicator():
         # set the server launcher in a single main widget, only once:
         server_launcher=server_launcher
     )
+    indicator.indicator.set_label("Markdown Imperator")
     return indicator
 
 

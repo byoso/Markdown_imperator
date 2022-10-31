@@ -1,0 +1,28 @@
+{% extends "_base.html" %}
+
+
+{% block content %}
+
+<h2>Databases settings</h2>
+
+Create a new database
+<form action="{{ url_for('create_database') }}" method="post">
+    <input type="text" placeholder="My_new_database_name" name="new_database">.sqlite3
+    <input class="button is-small" type="submit" value="Create">
+</form>
+<br>
+Select another existing database
+<br>
+<form action="" method="post">
+    <select name="" id="">
+        {% for database in databases %}
+            <option value="{{database}}">{{database}}</option>
+
+        {% endfor %}
+    </select>
+    <input type="submit" class="button is-small" value="select">
+</form>
+
+
+
+{% endblock content %}

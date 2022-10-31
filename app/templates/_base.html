@@ -36,7 +36,7 @@
                 <a class="navbar-item" href="{{ url_for('categories') }}">
                 Categories
                 </a>
-                <a class="navbar-item">
+                <a class="navbar-item" href="{{ url_for('settings') }}">
                 Settings
                 </a>
 
@@ -46,14 +46,11 @@
                 </a>
 
                 <div class="navbar-dropdown">
-                    <a class="navbar-item">
+                    <a class="navbar-item" href="{{ url_for('about') }}">
                     About
                     </a>
-                    <a class="navbar-item">
-                    Contact
-                    </a>
                     <hr class="navbar-divider">
-                    <a class="navbar-item" href="https://github.com/byoso/Markdown_imperator/issues">
+                    <a class="navbar-item" target="blank" href="https://github.com/byoso/Markdown_imperator/issues">
                     Report an issue
                     </a>
                 </div>
@@ -63,6 +60,17 @@
         </div>
       </nav>
 	<body class="m-4 content">
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="message is-info message-body">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
 
     {% block content %}
 

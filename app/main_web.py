@@ -7,13 +7,14 @@ import webbrowser
 from silly_db.selections import Selection
 
 from flask import (
+    flash,
     Flask,
     render_template,
     request,
     redirect,
     url_for,
     jsonify)
-from database.database import db
+from database.database import db, create_new_database
 
 from settings import DB_DIR
 from helpers import intersection
@@ -167,6 +168,37 @@ def delete_category(pk):
     return redirect(url_for('categories'))
 
 
+@app.route("/about/")
+def about():
+    return render_template("about.html")
+
+
+@app.route("/settings/", methods=['GET', 'POST'])
+def settings():
+    databases = [file for file in os.listdir(DB_DIR) if file.endswith('.sqlite3')]
+    context = {
+        'databases': databases,
+    }
+    return render_template("settings.html", **context)
+
+
+@app.route("/create_database/", methods=['POST'])
+def create_database():
+    if request.form.get('new_database') == "":
+        flash("Can not create a new database without a name")
+        return redirect(url_for('settings'))
+
+    new_database = request.form.get('new_database') + ".sqlite3"
+    new_database = new_database.replace(" ", "_")
+    if os.path.exists(os.path.join(DB_DIR, new_database)):
+        flash(f"Impossible: a database called {new_database} already exists !")
+    else:
+        db = create_new_database(new_database)
+        db.migrate_all()
+        flash(f"database created: {new_database}")
+    return redirect(url_for('settings'))
+
+
 if not os.path.exists(DB_DIR):
     os.makedirs(DB_DIR)
 check_db = db()
@@ -174,4 +206,5 @@ check_db.migrate_all()
 
 
 if __name__ == "__main__":
+    app.secret_key = "NO SECRET KEY, IT IS A LOCAL APP"
     app.run(debug=True)
