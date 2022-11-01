@@ -10,5 +10,4 @@ Markdown is well known for its use in the 'readme.md' files, but it is also a gr
 - redo -> ctrl+y
 
 ### Next features (wip) :
-- ability switch easily among databases.
 - ability to copy some selected documents from a database to another

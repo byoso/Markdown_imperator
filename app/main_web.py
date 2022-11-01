@@ -16,20 +16,22 @@ from flask import (
     jsonify)
 from database.database import db, create_new_database
 
-from settings import DB_DIR
+from settings import DB_DIR, settings
 from helpers import intersection
 
+
+if not os.path.exists(DB_DIR):
+    os.makedirs(DB_DIR)
+check_db = db()
+check_db.migrate_all()
 
 app = Flask(
         __name__,
         static_folder='statics',
         template_folder='templates'
             )
+app.secret_key = "NO SECRET KEY, IT IS A LOCAL APP"
 
-
-@app.route('/external_link/', methods=['POST'])
-def external_link(url):
-    webbrowser.open(url, new=2)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -173,20 +175,20 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/settings/", methods=['GET', 'POST'])
-def settings():
+@app.route("/databases/", methods=['GET', 'POST'])
+def databases():
     databases = [file for file in os.listdir(DB_DIR) if file.endswith('.sqlite3')]
     context = {
         'databases': databases,
     }
-    return render_template("settings.html", **context)
+    return render_template("databases.html", **context)
 
 
 @app.route("/create_database/", methods=['POST'])
 def create_database():
     if request.form.get('new_database') == "":
         flash("Can not create a new database without a name")
-        return redirect(url_for('settings'))
+        return redirect(url_for('databases'))
 
     new_database = request.form.get('new_database') + ".sqlite3"
     new_database = new_database.replace(" ", "_")
@@ -196,15 +198,21 @@ def create_database():
         db = create_new_database(new_database)
         db.migrate_all()
         flash(f"database created: {new_database}")
-    return redirect(url_for('settings'))
+    return redirect(url_for('databases'))
 
 
-if not os.path.exists(DB_DIR):
-    os.makedirs(DB_DIR)
-check_db = db()
-check_db.migrate_all()
+@app.route("/select_database/", methods=['POST'])
+def select_database():
+    new_db = request.form.get('selected_database')
+    settings.save_settings(current_db=new_db)
+    flash(f"Database selected: {new_db}")
+    return redirect(url_for('index'))
+
+@app.route("/open_database_folder/", methods=["POST"])
+def open_database_folder():
+    os.system(f"xdg-open '{DB_DIR}'")
+    return redirect(url_for('databases'))
 
 
 if __name__ == "__main__":
-    app.secret_key = "NO SECRET KEY, IT IS A LOCAL APP"
     app.run(debug=True)

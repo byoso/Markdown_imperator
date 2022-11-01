@@ -36,8 +36,8 @@
                 <a class="navbar-item" href="{{ url_for('categories') }}">
                 Categories
                 </a>
-                <a class="navbar-item" href="{{ url_for('settings') }}">
-                Settings
+                <a class="navbar-item" href="{{ url_for('databases') }}">
+                Databases
                 </a>
 
                 <div class="navbar-item has-dropdown is-hoverable">
@@ -63,11 +63,9 @@
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <ul class="message is-info message-body">
             {% for message in messages %}
-                <li>{{ message }}</li>
+                <p class="message is-info message-body">{{ message }}</p>
             {% endfor %}
-            </ul>
         {% endif %}
     {% endwith %}
 

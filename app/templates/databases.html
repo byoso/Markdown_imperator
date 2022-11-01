@@ -1,0 +1,34 @@
+{% extends "_base.html" %}
+
+
+{% block content %}
+<div class="container">
+    <h2>Databases settings</h2>
+    <p>Your Markdown Imperator's databases are stored here : ~/.local/share/Markdown_Imperator</p>
+    <h4>Create a new database</h4>
+    <form action="{{ url_for('create_database') }}" method="post">
+        <input type="text" placeholder="My_new_database_name" name="new_database">.sqlite3
+        <input class="button is-small" type="submit" value="Create">
+    </form>
+    <hr>
+    <h4>Select an existing database</h4>
+    <br>
+    <form action="{{ url_for('select_database') }}" method="post">
+        <select name="selected_database" id="">
+            {% for database in databases %}
+                <option value="{{database}}">{{database}}</option>
+
+            {% endfor %}
+        </select>
+        <input type="submit" class="button is-small" value="select">
+    </form>
+    <hr>
+    <h4>Open the databases folder</h4>
+    <form action="{{ url_for('open_database_folder') }}" method="post">
+        <input type="submit" value="Open" class="button">
+    </form>
+
+
+</div>
+
+{% endblock content %}

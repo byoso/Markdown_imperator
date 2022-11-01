@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="">
+<div class="container">
     <form action="{{ url_for('categories') }}" method="POST">
         <h2>add a category</h2>
         <div class="columns">
@@ -14,30 +14,30 @@
             </div>
         </div>
     </form>
+    {% if categories %}
+    <h3>My categories</h3>
+    <table>
+        {% for category in categories %}
+
+        <tr>
+            <td>{{ category.name }}</td>
+            <td>
+                <button class="button is-warning is-small" id="delete_{{category.id}}"
+                onclick="showConfirm({{ category.id }})">delete</button>
+                <a href="{{ url_for('delete_category', pk=category.id) }}"
+                id="confirm_{{category.id}}" style="visibility: hidden;"
+                    class="button is-danger is-small" >confirm</a>
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+    {% else %}
+        No category registered yet
+    {% endif %}
+
 </div>
-{% if categories %}
-<h3>My categories</h3>
-<table>
-    {% for category in categories %}
-
-    <tr>
-        <td>{{ category.name }}</td>
-        <td>
-            <button class="button is-warning is-small" id="delete_{{category.id}}"
-            onclick="showConfirm({{ category.id }})">delete</button>
-            <a href="{{ url_for('delete_category', pk=category.id) }}"
-            id="confirm_{{category.id}}" style="visibility: hidden;"
-                class="button is-danger is-small" >confirm</a>
-        </td>
-    </tr>
-
-    {% endfor %}
-
-</table>
-{% else %}
-    No category registered yet
-{% endif %}
-
 {% endblock content %}
 
 {% block script %}

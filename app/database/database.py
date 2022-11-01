@@ -14,7 +14,7 @@ current_db = Settings().get_settings()['current_db']
 def db():
     db = DB(
         base=BASE_DIR,
-        file=os.path.join(DB_DIR, current_db),
+        file=os.path.join(DB_DIR, Settings().get_settings()['current_db']),
         migrations_dir="migrations")
     return db
 

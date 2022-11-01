@@ -9,9 +9,6 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 # initial settings
 DB_DIR = os.path.expanduser("~/.local/share/Markdown_Imperator")
 
-DB_NAME = "Markdown_Imperator.sqlite3"
-DB_FILE = os.path.join(DB_DIR, DB_NAME)
-
 
 JSON = "settings.json"
 JSON_PATH = os.path.join(BASE_DIR, JSON)
@@ -36,7 +33,7 @@ class Settings:
         if os.path.exists(os.path.join(DB_DIR, current_db)):
             new_data['current_db'] = current_db
         else:
-            new_data['current_db'] = DB_NAME
+            new_data['current_db'] = "Default.sqlite3"
 
         with open(JSON_PATH, 'w') as f:
             json.dump(new_data, f)
