@@ -178,8 +178,10 @@ def about():
 @app.route("/databases/", methods=['GET', 'POST'])
 def databases():
     databases = [file for file in os.listdir(DB_DIR) if file.endswith('.sqlite3')]
+    current_database = settings.get_settings()['current_db']
     context = {
         'databases': databases,
+        'current_database': current_database,
     }
     return render_template("databases.html", **context)
 

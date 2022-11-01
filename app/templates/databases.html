@@ -16,7 +16,7 @@
     <form action="{{ url_for('select_database') }}" method="post">
         <select name="selected_database" id="">
             {% for database in databases %}
-                <option value="{{database}}">{{database}}</option>
+                <option value="{{database}}" id="{{database}}">{{database}}</option>
 
             {% endfor %}
         </select>
@@ -32,3 +32,12 @@
 </div>
 
 {% endblock content %}
+
+{% block script %}
+<script>
+    var current_database = "{{ current_database }}"
+    var selected_database = document.getElementById(current_database)
+    selected_database.selected = 'selected'
+</script>
+
+{% endblock script %}
