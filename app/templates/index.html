@@ -22,30 +22,44 @@
             <div class="card">
                 <header class="card-header" @click="show_hide('filters')">
                     <button class="card-header-title ">
-                        Filters +
+                        Options...
                     </button>
                 </header>
                 <div id="filters" style="display:none;">
-                    <input type="checkbox" id="check_all" @click="check_all()">
-                    <label for="check_all" class="ml-1" @click="check_all()"><strong> check / uncheck all filters</strong></label>
+                    <div>
+                        <p><strong>Copy to another database</strong></p>
+                        Copy checked documents to
+                        <select name="selected_database" id="database_selection">
+                            <option v-for="database in databases" :value="[[database]]" :id="[[database]]">[[database]]</option>
+                        </select>
+                        <button class="button is-small ml-1" @click="copy_to_database()" >Copy</button>
+                    </div>
+                    <div>
+                        <p><strong>Filters</strong></p>
+                        <input type="checkbox" id="check_all" @click="check_all()">
+                        <label for="check_all" class="ml-1" @click="check_all()"><strong> check / uncheck all filters</strong></label>
 
-                    <form action="{{ url_for('index') }}" method="post">
-                        <div v-for="category in categories">
-                            <input type="checkbox" :id="'cat'+[[category.id]]" name="filters" :value="[[category.id]]" class="filter">
-                            <label for="'cat'+[[category.id]]" class="ml-1" @click="check_the_box('cat'+[[category.id]], [[category.id]])">[[category.name]]</label>
-                        </div>
-                        <button class="button is-fullwidth" >apply filters</button>
-
-                    </form>
-
+                        <form action="{{ url_for('index') }}" method="post">
+                            <div v-for="category in categories">
+                                <input type="checkbox" :id="'cat'+[[category.id]]" name="filters" :value="[[category.id]]" class="filter">
+                                <label for="'cat'+[[category.id]]" class="ml-1" @click="check_the_box('cat'+[[category.id]], [[category.id]])">[[category.name]]</label>
+                            </div>
+                            <button class="button is-fullwidth" >apply filters</button>
+                        </form>
+                    </div>
+                    <br>
                 </div>
             </div>
             <hr>
+
+
+
             <div  style="overflow-y:scroll; word-wrap:break-word; height:700px;">
                 <table class="table is-narrow">
                     <tr @mouseover="preview(doc.id);" class="table_row"
                     v-for="doc in docs">
-                        <td >[[ doc.title ]]</td>
+                        <td><input type="checkbox" :id="'check_doc_'+[[doc.id]]"></td>
+                        <td @click="check_document(doc.id)">[[ doc.title ]]</td>
                         <td><label class="button is-small is-warning"
                             @click="delete_button(doc.id)">Delete</label>
                         <a :href="'delete/' + [[ doc.id ]]" class="button is-danger is-small ml-1"
@@ -74,6 +88,7 @@
     const docs = {{ docs | safe }}
     let categories = {{ categories | safe }}
     const { createApp } = Vue
+    let databases = {{ databases | safe}}
 
     createApp({
         delimiters: ['[[', ']]'],
@@ -82,6 +97,7 @@
                 docs: docs,
                 categories: categories,
                 preview_html: "",
+                databases: databases,
             }
         },
         methods:{
@@ -94,6 +110,7 @@
                 }
             },
             check_the_box(elem_id, id){
+                // for filters
                 var box = document.getElementById(elem_id);
                 if (box.checked === true) {
                     console.log("id unchecked: " + id)
@@ -104,6 +121,7 @@
                 };
             },
             check_all(){
+                // for filters
                 console.log("check all")
                 var all_box = document.getElementById('check_all')
                 var filters = document.getElementsByClassName('filter')
@@ -141,6 +159,46 @@
                         event.preventDefault();
                     })
                 }
+            },
+            check_document(id){
+                var docu = document.getElementById("check_doc_" + id)
+                if (docu.checked == true) {
+                    docu.checked = false
+                } else {
+                    docu.checked = true
+                }
+            },
+            get_checked_documents(){
+                var documents = []
+                docs.forEach(doc => {
+                    if (document.getElementById('check_doc_'+doc.id).checked){
+                        documents.push(doc.id)
+                    }
+                })
+                return documents
+            },
+            copy_to_database(){
+                var db_selected = document.getElementById("database_selection").value
+                var documents = this.get_checked_documents()
+                console.log('copy to database...'+db_selected)
+                console.log(documents)
+
+
+                var headers = new Headers();
+                var datas = new FormData();
+                datas.append('db_selected', db_selected)
+                datas.append('documents', JSON.stringify(documents))
+                var requestOptions = {
+                method: 'POST',
+                headers: headers,
+                body: datas,
+                redirect: 'follow'
+                };
+                let copy_to_database_url = "{{ url_for('copy_to_database') }}"
+                fetch(copy_to_database_url, requestOptions)
+                .then(response => response.text())
+                // .then(result => console.log(result))
+                .catch(error => console.log('error', error));
             },
         },
         mounted() {

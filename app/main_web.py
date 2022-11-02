@@ -38,6 +38,8 @@ app.secret_key = "NO SECRET KEY, IT IS A LOCAL APP"
 def index():
     filters = []
     selected_documents = Selection()
+    databases = [file for file in os.listdir(DB_DIR) if file.endswith('.sqlite3')]
+
     if request.method == "POST":
         filters = [int(filter) for filter in request.form.getlist('filters')]
 
@@ -79,6 +81,7 @@ def index():
     context = {
         'docs': selected_documents.order_by('title').jsonify(),
         'categories': categories.jsonify(),
+        'databases': databases,
     }
     return render_template('index.html', **context)
 
@@ -214,6 +217,39 @@ def select_database():
 def open_database_folder():
     os.system(f"xdg-open '{DB_DIR}'")
     return redirect(url_for('databases'))
+
+
+@app.route("/copy_to_database", methods=["POST"])
+def copy_to_database():
+    documents_ids = json.loads(request.form.get('documents'))
+    database = request.form.get('db_selected')
+    database_file = os.path.join(DB_DIR, database)
+    print(database_file)
+    current_database = settings.get_settings()['current_db']
+    if current_database == database:
+        os.system(
+            "notify-send \"Copy failed:\" "
+            "\"You can not copy to the database currently in use\""
+            )
+        return redirect(url_for('index'))
+    print("current database: ", current_database)
+    print(database, type(database))
+    documents = []
+    message = ""
+    for pk in documents_ids:
+        doc = db().model('document').sil.get_id(int(pk))
+        documents.append(doc)
+        # here insert into database
+        db(database_file).model("document").sil.insert(
+            title=doc.title,
+            content=doc.content
+            )
+
+        message += f"\- {doc.title}\n"
+
+    to_send = f"\"Copy to {database} done:\" \"{message}\""
+    os.system(f"notify-send {to_send}")
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":

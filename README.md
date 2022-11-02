@@ -13,8 +13,5 @@ Markdown is well known for it's use in the 'readme.md' files, but it is also a g
 - Create and edit markdown documents
 - Create custom categories to organize your documents
 - Create as much databases as you want
+- Create new databases and copy the documents from one to another
 - Each database is a simple '.sqlite3' file, easy to copy and share
-
-
-### Next features (wip) :
-- ability to copy some selected documents from a database to another
